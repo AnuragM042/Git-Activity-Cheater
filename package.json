@@ -4,8 +4,7 @@
     "pm2": "^5.4.2",
     "dotenv": "^10.0.0"
   },
-    "scripts": {
-      "pm2-start": "pm2 start src/index.js --name github-auto --cron '*/5 * * * *'" 
-    }
-  
+  "scripts": {
+    "pm2-start": "pm2 start src/index.js --name github-auto --cron '*/5 * * * *'"
+  }
 }
