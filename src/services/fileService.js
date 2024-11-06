@@ -10,7 +10,7 @@ function createOrUpdateFile() {
   return new Promise((resolve, reject) => {
     fs.writeFile(filePath, 'Automated commit by Node.js\n', (err) => {
       if (err) reject(`Error creating/updating file: ${err}`);
-      else resolve('File created/updated successfully');
+      else resolve('File created/updated successful  ly');
     });
   });
 }
