@@ -5,7 +5,7 @@ const express = require("express");
 const path = require("path");
 
 const app = express();
-const PORT = 3000;
+const PORT = 6000;
 
 const filePath = "./example.txt";
 let commitNumber = 1;
@@ -60,13 +60,8 @@ function pushChanges() {
   });
 }
 
-function runProcess() {
-  makeChanges();
-  commitChanges();
-}
-
-setInterval(runProcess, 3 * 60 * 60 * 1000);
-runProcess();
+makeChanges();
+commitChanges();
 
 // Serve the frontend
 app.use(express.static(path.join(__dirname, "frontend")));
