@@ -1,0 +1,21 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 20px;
+    background-color: #f4f4f9;
+}
+
+h1 {
+    color: #333;
+}
+
+#details p {
+    font-size: 1.2em;
+    margin: 10px 0;
+}
+
+#timer {
+    font-weight: bold;
+    color: #d9534f;
+    font-size: 1.5em;
+}

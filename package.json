@@ -1,11 +1,11 @@
 {
   "version": "1.0.0",
   "dependencies": {
-    "pm2": "^5.4.2",
-    "dotenv": "^10.0.0"
+    "dotenv": "^10.0.0",
+    "express": "^4.21.1",
+    "pm2": "^5.4.2"
   },
   "scripts": {
-  "pm2-start": "pm2 start src/index.js --name github-auto --cron '0 */3 * * *'"
-
+    "pm2-start": "pm2 start src/index.js --name github-auto --cron '0 */3 * * *'"
   }
 }
