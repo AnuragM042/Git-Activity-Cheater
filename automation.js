@@ -1,30 +1,28 @@
+const express = require("express");
 const fs = require("fs");
 const { exec } = require("child_process");
-require("dotenv").config();
-const express = require("express");
 const path = require("path");
+require("dotenv").config();
 
 const app = express();
-const PORT = 6000;
-
+const PORT = 3001;
 const filePath = "./example.txt";
 let commitNumber = 1;
 
+// Load the last commit number from a file
 if (fs.existsSync("./commit_number.txt")) {
   commitNumber =
     parseInt(fs.readFileSync("./commit_number.txt", "utf-8"), 10) || 1;
 }
 
-// GitHub details from .env
-const githubUsername = process.env.GITHUB_USERNAME;
-const githubBranch = process.env.GITHUB_BRANCH;
-
+// Function to make changes to the file
 function makeChanges() {
   const newContent = `This is an automated change - ${new Date().toISOString()}\n`;
   fs.appendFileSync(filePath, newContent, "utf-8");
   console.log("File updated with new content");
 }
 
+// Function to commit changes with an incremental message
 function commitChanges() {
   const commitMessage = `git commit message ${commitNumber}`;
   exec("git add .", (err) => {
@@ -50,6 +48,7 @@ function commitChanges() {
   });
 }
 
+// Function to push changes to GitHub
 function pushChanges() {
   exec("git push", (err) => {
     if (err) {
@@ -63,14 +62,22 @@ function pushChanges() {
 makeChanges();
 commitChanges();
 
-// Serve the frontend
-app.use(express.static(path.join(__dirname, "frontend")));
+const gitHubDetails = {
+  username: "AnuragM042",
+  branch: "main", // Specify the branch name here
+  url: "https://github.com/AnuragM042/your-repo", // Replace with your GitHub repo URL
+};
 
-// API to provide GitHub details
+// Endpoint to serve GitHub details
 app.get("/api/github-details", (req, res) => {
-  res.json({ username: githubUsername, branch: githubBranch });
+  res.json(gitHubDetails);
 });
 
-app.listen(PORT, () =>
-  console.log(`Server running on http://localhost:${PORT}`)
-);
+// Frontend route
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "./frontend/index.html"));
+});
+
+app.listen(PORT, () => {
+  console.log(`Frontend running on http://localhost:${PORT}`);
+});

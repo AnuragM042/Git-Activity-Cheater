@@ -1,40 +1,55 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const usernameElement = document.getElementById("username");
-    const branchElement = document.getElementById("branch");
+  const usernameElement = document.getElementById("username");
+  const branchElement = document.getElementById("branch");
+  //const timerElement = document.getElementById("timer");
+  const repoLink = document.getElementById("repo-link");
+
+  // Fetch GitHub details (username, branch, URL) from the backend
+  async function fetchGitHubDetails() {
+    try {
+      const response = await fetch("/api/github-details");
+      const data = await response.json();
+      usernameElement.textContent = data.username;
+      branchElement.textContent = data.branch;
+      repoLink.href = data.url;
+    } catch (error) {
+      console.error("Error fetching GitHub details:", error);
+    }
+  }
+
+  // Timer logic
+  const countdownDuration = 3 * 60 * 60; // 3 hours in seconds
+  let remainingTime = countdownDuration;
+
+  function formatTime(seconds) {
+    const hours = String(Math.floor(seconds / 3600)).padStart(2, "0");
+    const minutes = String(Math.floor((seconds % 3600) / 60)).padStart(2, "0");
+    const secs = String(seconds % 60).padStart(2, "0");
+    return `${hours}:${minutes}:${secs}`;
+  }
+
+  function startCountdown() {
     const timerElement = document.getElementById("timer");
+    timerElement.textContent = formatTime(remainingTime);
 
-    // Fetch GitHub details (username, branch) from the backend
-    async function fetchGitHubDetails() {
-        try {
-            const response = await fetch("/api/github-details");
-            const data = await response.json();
-            usernameElement.textContent = data.username;
-            branchElement.textContent = data.branch;
-        } catch (error) {
-            console.error("Error fetching GitHub details:", error);
-        }
-    }
+    const countdownInterval = setInterval(() => {
+      remainingTime--;
 
-    // Timer logic
-    const interval = 3 * 60 * 60 * 1000; // 3 hours in milliseconds
-    let remainingTime = interval;
+      // Update the timer display
+      timerElement.textContent = formatTime(remainingTime);
 
-    function startCountdown() {
-        setInterval(() => {
-            const hours = Math.floor((remainingTime / (1000 * 60 * 60)) % 24);
-            const minutes = Math.floor((remainingTime / (1000 * 60)) % 60);
-            const seconds = Math.floor((remainingTime / 1000) % 60);
-            timerElement.textContent = `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
-            remainingTime -= 1000;
+      // Check if time has run out
+      if (remainingTime <= 0) {
+        clearInterval(countdownInterval);
+        remainingTime = countdownDuration; // Reset the timer
+        startCountdown(); // Restart the countdown
+      }
+    }, 1000); // Update every second
+  }
 
-            // Reset the countdown after each interval
-            if (remainingTime < 0) {
-                remainingTime = interval;
-            }
-        }, 1000);
-    }
+  // Start the countdown initially
+  startCountdown();
 
-    // Initialize
-    fetchGitHubDetails();
-    startCountdown();
+  // Initialize
+  fetchGitHubDetails();
 });
