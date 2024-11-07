@@ -1,8 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
   const usernameElement = document.getElementById("username");
   const branchElement = document.getElementById("branch");
-  //const timerElement = document.getElementById("timer");
   const repoLink = document.getElementById("repo-link");
+  const timerElement = document.getElementById("timer"); // Ensure this element is fetched here
 
   // Fetch GitHub details (username, branch, URL) from the backend
   async function fetchGitHubDetails() {
@@ -29,7 +29,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function startCountdown() {
-    const timerElement = document.getElementById("timer");
+    if (!timerElement) return; // Ensure the timer element exists
+
     timerElement.textContent = formatTime(remainingTime);
 
     const countdownInterval = setInterval(() => {
@@ -47,9 +48,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 1000); // Update every second
   }
 
-  // Start the countdown initially
+  // Start the countdown after the DOM is loaded
   startCountdown();
 
-  // Initialize
+  // Initialize GitHub details
   fetchGitHubDetails();
 });
