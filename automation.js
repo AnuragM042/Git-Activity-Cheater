@@ -50,6 +50,13 @@ function pushChanges() {
     });
 }
 
-// Run the functions
-makeChanges();
-commitChanges();
+function runProcess() {
+    makeChanges();
+    commitChanges();
+}
+
+// Start the process and loop every 3 hours
+setInterval(runProcess, 3 * 60 * 60 * 1000); // 3 hours in milliseconds
+
+// Initial run
+runProcess();
