@@ -2,25 +2,25 @@ document.addEventListener("DOMContentLoaded", () => {
   const usernameElement = document.getElementById("username");
   const branchElement = document.getElementById("branch");
   const repoLink = document.getElementById("repo-link");
-  const timerElement = document.getElementById("timer"); // Ensure this element is fetched here
+  const timerElement = document.getElementById("timer");
 
-  // Fetch GitHub details (username, branch, URL) from the backend
+  const countdownDuration = 1 * 60 * 60; // 3 hours in seconds
+  let remainingTime = countdownDuration;
+
+  // Fetch GitHub details
   async function fetchGitHubDetails() {
     try {
       const response = await fetch("/api/github-details");
       const data = await response.json();
-      usernameElement.textContent = data.username;
-      branchElement.textContent = data.branch;
-      repoLink.href = data.url;
+      usernameElement.textContent = data.username || "Unavailable";
+      branchElement.textContent = data.branch || "Unavailable";
+      repoLink.href = data.url || "#";
     } catch (error) {
       console.error("Error fetching GitHub details:", error);
     }
   }
 
-  // Timer logic
-  const countdownDuration = 3 * 60 * 60; // 3 hours in seconds
-  let remainingTime = countdownDuration;
-
+  // Timer countdown
   function formatTime(seconds) {
     const hours = String(Math.floor(seconds / 3600)).padStart(2, "0");
     const minutes = String(Math.floor((seconds % 3600) / 60)).padStart(2, "0");
@@ -29,28 +29,20 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function startCountdown() {
-    if (!timerElement) return; // Ensure the timer element exists
-
     timerElement.textContent = formatTime(remainingTime);
-
     const countdownInterval = setInterval(() => {
       remainingTime--;
-
-      // Update the timer display
       timerElement.textContent = formatTime(remainingTime);
 
-      // Check if time has run out
       if (remainingTime <= 0) {
         clearInterval(countdownInterval);
-        remainingTime = countdownDuration; // Reset the timer
-        startCountdown(); // Restart the countdown
+        remainingTime = countdownDuration; // Reset timer
+        startCountdown(); // Restart countdown
       }
-    }, 1000); // Update every second
+    }, 1000);
   }
 
-  // Start the countdown after the DOM is loaded
-  startCountdown();
-
-  // Initialize GitHub details
+  // Initial function calls
   fetchGitHubDetails();
+  startCountdown();
 });

@@ -3,7 +3,7 @@ module.exports = {
     {
       name: "automation",
       script: "./automation.js",
-      cron_restart: "0 */2 * * *", // Every 3 hours
+      cron_restart: "0 */1 * * *", // Every 1 hours
       watch: false,
       env: {
         NODE_ENV: "production",

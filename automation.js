@@ -5,26 +5,25 @@ const path = require("path");
 require("dotenv").config();
 
 const app = express();
-const PORT = 3001;
-const filePath = "./example.txt";
+const PORT = 3002;
+const filePath = "./commit_number.txt";
 let commitNumber = 1;
 
 // Load the last commit number from a file
-if (fs.existsSync("./commit_number.txt")) {
-  commitNumber =
-    parseInt(fs.readFileSync("./commit_number.txt", "utf-8"), 10) || 1;
+if (fs.existsSync(filePath)) {
+  commitNumber = parseInt(fs.readFileSync(filePath, "utf-8"), 10) || 1;
 }
 
 // Function to make changes to the file
 function makeChanges() {
   const newContent = `This is an automated change - ${new Date().toISOString()}\n`;
-  fs.appendFileSync(filePath, newContent, "utf-8");
+  fs.appendFileSync("./example.txt", newContent, "utf-8");
   console.log("File updated with new content");
 }
 
 // Function to commit changes with an incremental message
 function commitChanges() {
-  const commitMessage = `git commit message ${commitNumber}`;
+  const commitMessage = `Automated commit ${commitNumber}`;
   exec("git add .", (err) => {
     if (err) {
       console.error("Error adding files:", err);
@@ -37,11 +36,7 @@ function commitChanges() {
       } else {
         console.log(`Committed successfully with message: ${commitMessage}`);
         commitNumber++;
-        fs.writeFileSync(
-          "./commit_number.txt",
-          commitNumber.toString(),
-          "utf-8"
-        );
+        fs.writeFileSync(filePath, commitNumber.toString(), "utf-8");
         pushChanges();
       }
     });
@@ -59,25 +54,23 @@ function pushChanges() {
   });
 }
 
+// Schedule automated commit-push cycle every 2 hours
+
 makeChanges();
 commitChanges();
 
+// Serve GitHub details dynamically from environment variables
 const gitHubDetails = {
-  username: "AnuragM042",
-  branch: "main", // Specify the branch name here
-  url: "https://github.com/AnuragM042/your-repo", // Replace with your GitHub repo URL
+  username: process.env.GITHUB_USERNAME,
+  branch: process.env.GITHUB_BRANCH,
+  url: process.env.GITHUB_REPO_URL,
 };
 
-// Endpoint to serve GitHub details
+app.use(express.static(path.join(__dirname, "frontend")));
 app.get("/api/github-details", (req, res) => {
   res.json(gitHubDetails);
 });
 
-// Frontend route
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "./frontend/index.html"));
-});
-
 app.listen(PORT, () => {
-  console.log(`Frontend running on http://localhost:${PORT}`);
+  console.log(`Server running on http://localhost:${PORT}`);
 });
