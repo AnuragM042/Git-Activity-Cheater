@@ -35,7 +35,7 @@ function commitChanges() {
         console.error("Error committing files:", err);
       } else {
         console.log(
-          `Committed successfully with message: ${commitMessage} ::: ${JSON.stringify(Date.now())}`
+          `Committed successfully with message: ${commitMessage} ::: ${new Date().toISOString()}}`
         );
         commitNumber++;
         fs.writeFileSync(filePath, commitNumber.toString(), "utf-8");
