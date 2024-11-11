@@ -35,7 +35,7 @@ function commitChanges() {
         console.error("Error committing files:", err);
       } else {
         console.log(
-          `Committed successfully with message: ${commitMessage} ::: ${Date.now()}`
+          `Committed successfully with message: ${commitMessage} ::: ${JSON.stringify(Date.now())}`
         );
         commitNumber++;
         fs.writeFileSync(filePath, commitNumber.toString(), "utf-8");
@@ -51,7 +51,7 @@ function pushChanges() {
     if (err) {
       console.error("Error pushing files:", err);
     } else {
-      console.log("Changes pushed to GitHub", Date.now());
+      console.log("Changes pushed to GitHub", JSON.stringify(Date.now()));
     }
   });
 }
