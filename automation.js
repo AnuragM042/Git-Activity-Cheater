@@ -16,7 +16,7 @@ if (fs.existsSync(filePath)) {
 
 // Function to make changes to the file
 function makeChanges() {
-  const newContent = `This is an automated change - ${new Date().toISOString()}\n`;
+  const newContent = `This is an automated change - ${new Date().toString()}\n`;
   fs.appendFileSync("./example.txt", newContent, "utf-8");
   console.log("File updated with new content");
 }
@@ -35,7 +35,7 @@ function commitChanges() {
         console.error("Error committing files:", err);
       } else {
         console.log(
-          `Committed successfully with message: ${commitMessage} ::: ${new Date().toISOString()}}`
+          `Committed successfully with message: ${commitMessage} ::: ${new Date().toString()}}`
         );
         commitNumber++;
         fs.writeFileSync(filePath, commitNumber.toString(), "utf-8");
